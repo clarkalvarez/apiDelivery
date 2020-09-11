@@ -66,15 +66,18 @@ public $successStatus = 200;
         if($stock== 0)
         {
             $message = "Out of Stock";
+            $status=400;
         }
         else if($stock < $quantity)
         {
             $message = "Failed to order this product due to unavailability of the stock";
+            $status=400;
         }
         else
         {
+            $status=201;
             $stock = (int)$stock - (int)$quantity;
-            $message = "Order successfully placed";
+            $message = "You have successfully ordered this product";
              $inputs = [
                 'user_id'=>Auth::user()->id,
                 'order_id' =>$order_id,
@@ -86,14 +89,10 @@ public $successStatus = 200;
         }
 
         return response()->json([
-            'success' => $user,
-            'id' => $orders->id,
-            'name' => $orders->name,
-            'stock' => $orders->available_stock,
+
             'message' => $message,
-            'updated_stock' =>$stock
             
-            ]); 
+        ], $status); 
     } 
  
 }
